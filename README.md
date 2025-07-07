@@ -53,11 +53,7 @@
 
 ---
 
-<h2>🖼️ Project Output Preview</h2>
-
-<p align="center">
-  <img src="https://github.com/Madhu1207-coder/Political-AI-chatbot/blob/main/output_screenshot.png" width="90%" alt="Chatbot Screenshot">
-</p>
+<h2>🎥 Project Demo</h2> <p align="center"> <a href="https://youtu.be/3NGFVKncPD8" target="_blank"> <img src="https://img.youtube.com/vi/3NGFVKncPD8/0.jpg" alt="Watch Demo Video" width="70%"> </a> </p> <p align="center"><strong>▶️ Click the image above to watch the full demo on YouTube</strong></p>
 
 ---
 
