@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>India Political ChatBot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      position: relative;
+      overflow: hidden;
+    }
+
+    video#bgVideo {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      z-index: -1;
+    }
+
+    .chat-container {
+      width: 100%;
+      max-width: 700px;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+      display: flex;
+      flex-direction: column;
+      height: 90vh;
+      backdrop-filter: blur(6px);
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+
+    .header img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+
+    h2 {
+      font-size: 32px;
+      color: #222;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+      margin: 0;
+    }
+
+    .chat-window {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      background: url('https://static.vecteezy.com/system/resources/previews/033/502/590/large_2x/cute-pink-robot-with-wings-on-a-pink-background-ai-generated-free-photo.jpeg') no-repeat center center;
+      background-size: cover;
+      border-radius: 8px;
+    }
+
+    .message {
+      max-width: 70%;
+      padding: 14px 18px;
+      border-radius: 20px;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      animation: fadeIn 0.4s ease forwards;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .user-message {
+      background: #4CAF50;
+      color: #fff;
+      margin-left: auto;
+      border-bottom-right-radius: 0;
+      font-size: 17px;
+    }
+
+    .bot-message {
+      background: #FFC107;
+      color: #222;
+      margin-right: auto;
+      border-bottom-left-radius: 0;
+      font-size: 17px;
+    }
+
+    .icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin: 0 10px;
+      flex-shrink: 0;
+    }
+
+    .icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .message-content {
+      flex: 1;
+      word-wrap: break-word;
+      white-space: pre-wrap;
+      font-size: 17px;
+      line-height: 1.6;
+      font-weight: 500;
+      text-shadow: 0.5px 0.5px 1px rgba(0,0,0,0.15);
+    }
+
+    form {
+      display: flex;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      padding: 14px 16px;
+      border: 2px solid #ccc;
+      border-radius: 14px;
+      font-size: 16px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      background: #fff;
+      color: #333;
+    }
+
+    input[type="text"]::placeholder {
+      color: #666;
+    }
+
+    input[type="text"]:focus {
+      border-color: #007BFF;
+      outline: none;
+      box-shadow: 0 0 5px rgba(0,123,255,0.5);
+    }
+
+    button {
+      padding: 14px 20px;
+      background: #007BFF;
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background: #0056b3;
+      transform: translateY(-1px);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 14px;
+      color: #333;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Background Video -->
+<video autoplay muted loop id="bgVideo">
+  <source src="https://cdn.pixabay.com/video/2020/04/23/36954-413208052_large.mp4" type="video/mp4">
+</video>
+
+<div class="chat-container">
+  <div class="header">
+    <img src="https://image.lexica.art/full_jpg/b39a7085-8883-4804-b044-4acb1c5a5098" alt="Icon">
+    <h2>India Political ChatBot</h2>
+  </div>
+
+  <div id="chatWindow" class="chat-window"></div>
+
+  <form id="chatForm">
+    <input type="text" id="question" name="question" placeholder="Type your message..." required />
+    <button type="submit">Send</button>
+  </form>
+
+  <div class="footer">Powered by Gemini AI API</div>
+</div>
+
+<script>
+  const chatForm = document.getElementById("chatForm");
+  const chatWindow = document.getElementById("chatWindow");
+  const questionInput = document.getElementById("question");
+
+  function appendMessage(text, sender) {
+    const messageDiv = document.createElement("div");
+    messageDiv.classList.add("message", sender === 'user' ? "user-message" : "bot-message");
+
+    const iconDiv = document.createElement("div");
+    iconDiv.classList.add("icon");
+    const img = document.createElement("img");
+
+    if (sender === 'user') {
+      img.src = "https://cdn.pixabay.com/photo/2024/02/23/08/04/ai-generated-8591514_1280.jpg";
+    } else {
+      img.src = "https://www.shutterstock.com/image-illustration/robot-chatbot-icon-isolated-on-260nw-2335490321.jpg";
+    }
+
+    iconDiv.appendChild(img);
+
+    const textDiv = document.createElement("div");
+    textDiv.classList.add("message-content");
+    textDiv.textContent = text;
+
+    if (sender === 'user') {
+      messageDiv.appendChild(textDiv);
+      messageDiv.appendChild(iconDiv);
+    } else {
+      messageDiv.appendChild(iconDiv);
+      messageDiv.appendChild(textDiv);
+    }
+
+    chatWindow.appendChild(messageDiv);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+  }
+
+  chatForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const question = questionInput.value.trim();
+    if (!question) return;
+
+    appendMessage(question, "user");
+    questionInput.value = "";
+
+    const thinkingMsg = document.createElement("div");
+    thinkingMsg.classList.add("message", "bot-message");
+    thinkingMsg.innerHTML = `
+      <div class="icon">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTARoM8VVDWi12So2jxQQaB90xhy2X54e6JCA&s" />
+      </div>
+      <div class="message-content">⏳ Thinking...</div>
+    `;
+    chatWindow.appendChild(thinkingMsg);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+
+    try {
+      const response = await fetch("/ask", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: "question=" + encodeURIComponent(question),
+      });
+      const result = await response.json();
+      chatWindow.removeChild(thinkingMsg);
+      appendMessage(result.response, "bot");
+    } catch (err) {
+      chatWindow.removeChild(thinkingMsg);
+      appendMessage("⚠️ Error fetching response.", "bot");
+    }
+  });
+</script>
+
+</body>
+</html>
